@@ -1,7 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
-// ❌ ANTES IMPORTABAS: import StudentDashboard from "./components/MisSolicitudes"; 
-// ✅ AHORA IMPORTA ESTE:
 import StudentDashboard from "./components/StudentDashboard"; 
 import JefeDashboard from "./components/JefeDashboard";
 

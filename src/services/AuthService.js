@@ -12,10 +12,8 @@ export const authService = {
         const token = response.data.token;
         localStorage.setItem("token", token);
 
-        // Decodificación segura
         const payload = JSON.parse(atob(token.split('.')[1]));
         
-        // BUSCAMOS EL NOMBRE EN TODOS LOS CAMPOS POSIBLES
         const nombreReal = payload["unique_name"] || 
                            payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] || 
                            payload["name"] || 
@@ -25,7 +23,6 @@ export const authService = {
                          payload["role"] || 
                          "Estudiante";
 
-        // GUARDAMOS EL OBJETO SIMPLIFICADO
         const userObj = { 
             nombre: nombreReal, 
             rol: userRole 

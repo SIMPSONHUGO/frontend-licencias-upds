@@ -4,9 +4,6 @@ import { authService } from "../services/AuthService";
 import MainLayout from "./MainLayout";
 import "./Dashboard.css"; 
 
-/**
- * SRP: Componente especializado en el renderizado de la tabla de trámites.
- */
 const SolicitudesTable = ({ solicitudes, loading }) => {
   if (loading) return <div className="text-center p-5 fw-bold">Sincronizando información...</div>;
   
@@ -65,15 +62,13 @@ const SolicitudesTable = ({ solicitudes, loading }) => {
 };
 
 const StudentDashboard = ({ onLogout }) => {
-  // --- Estados ---
   const [lista, setLista] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [showToast, setShowToast] = useState(false); // Reemplazo de alert nativo
+  const [showToast, setShowToast] = useState(false);
   const [usuarioNombre, setUsuarioNombre] = useState("Estudiante");
   const [formData, setFormData] = useState({ materia: "", docente: "", fechaInicio: "", fechaFin: "", motivo: "", archivo: null });
 
-  // --- Lógica de Carga de Datos ---
   const cargarDatos = useCallback(async () => {
     setLoading(true);
     try {
@@ -93,7 +88,6 @@ const StudentDashboard = ({ onLogout }) => {
     cargarDatos();
   }, [cargarDatos]);
 
-  // --- Handlers de Formulario ---
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -107,7 +101,6 @@ const StudentDashboard = ({ onLogout }) => {
       const token = authService.getToken();
       const data = new FormData();
       
-      // MAPEADO MANUAL EXACTO PARA EL SERVIDOR .NET (Mayúsculas iniciales)
       data.append("Materia", formData.materia);
       data.append("Docente", formData.docente);
       data.append("FechaInicio", formData.fechaInicio);
@@ -117,13 +110,12 @@ const StudentDashboard = ({ onLogout }) => {
 
       await solicitudService.crear(data, token);
       
-      // Mostrar Notificación Toast Agradable
       setShowToast(true);
       setTimeout(() => setShowToast(false), 4000);
 
       setShowModal(false);
       setFormData({ materia: "", docente: "", fechaInicio: "", fechaFin: "", motivo: "", archivo: null });
-      cargarDatos(); // Recarga la lista inmediatamente
+      cargarDatos();
     } catch (error) {
       console.error("Error al enviar la solicitud.");
     }
@@ -132,7 +124,6 @@ const StudentDashboard = ({ onLogout }) => {
   return (
     <MainLayout role="Estudiante" onLogout={onLogout}>
       
-      {/* Toast Animado: Diseño agradable en lugar de alertas del navegador */}
       {showToast && (
         <div className="custom-toast">
             <span className="toast-icon">🚀</span>
@@ -140,7 +131,6 @@ const StudentDashboard = ({ onLogout }) => {
         </div>
       )}
 
-      {/* Banner Sólido Institucional Restaurado */}
       <div className="welcome-banner-estudiante">
         <h1 style={{ fontSize: '1.8rem', margin: 0, fontWeight: 800 }}>¡Hola, {usuarioNombre}! 👋</h1>
         <p style={{ opacity: 0.9, marginTop: '0.4rem', fontSize: '1rem' }}>Panel oficial para la gestión de licencias académicas.</p>
@@ -148,7 +138,6 @@ const StudentDashboard = ({ onLogout }) => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '2rem', alignItems: 'start' }}>
         
-        {/* Historial de Trámites */}
         <div className="table-container">
           <div style={{ padding: '18px 25px', borderBottom: '1px solid #edf2f7' }}>
             <h3 style={{ color: 'var(--upds-blue)', margin: 0, fontWeight: 800, fontSize: '1.2rem' }}>📊 HISTORIAL DE TRÁMITES</h3>
@@ -156,7 +145,6 @@ const StudentDashboard = ({ onLogout }) => {
           <SolicitudesTable solicitudes={lista} loading={loading} />
         </div>
 
-        {/* Acción Lateral con Diseño de Relieve */}
         <div className="stat-card" style={{ padding: '25px', borderBottom: '8px solid var(--upds-gold)' }}>
           <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🚀</div>
           <h4 style={{ color: 'var(--upds-blue)', fontWeight: 800 }}>¿NUEVA SOLICITUD?</h4>
@@ -169,7 +157,6 @@ const StudentDashboard = ({ onLogout }) => {
         </div>
       </div>
 
-      {/* --- FORMULARIO OPTIMIZADO PARA VISIBILIDAD TOTAL (SIN SCROLL) --- */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -180,7 +167,7 @@ const StudentDashboard = ({ onLogout }) => {
             
             <div className="modal-body-custom">
               <form onSubmit={handleSubmit}>
-                <div className="row g-2"> {/* Agrupación horizontal para ganar espacio vertical */}
+                <div className="row g-2">
                   <div className="col-md-6 mb-2">
                     <label style={{ fontSize: '0.75rem', fontWeight: 700 }}>ASIGNATURA</label>
                     <input name="materia" className="form-control-aesthetic" required value={formData.materia} onChange={handleInputChange} placeholder="Materia" />
@@ -214,7 +201,6 @@ const StudentDashboard = ({ onLogout }) => {
                   </div>
                 </div>
 
-                {/* Pie de modal con botones de alto relieve restaurados */}
                 <div className="d-flex justify-content-end gap-2 pt-2" style={{ borderTop: '1px solid #eee' }}>
                   <button type="button" className="btn-secondary" onClick={() => setShowModal(false)} style={{ padding: '10px 20px', borderRadius: '10px', fontWeight: 700, fontSize: '0.85rem' }}>Cerrar</button>
                   <button type="submit" className="btn-primary" style={{ padding: '10px 25px', borderRadius: '12px', fontWeight: 800, fontSize: '0.85rem' }}>Enviar Trámite 🚀</button>

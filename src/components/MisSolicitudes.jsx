@@ -1,8 +1,7 @@
-// src/components/MisSolicitudes.jsx (Nuevo StudentDashboard)
 import { useEffect, useState } from "react";
 import { solicitudService } from "../services/SolicitudService";
 import { authService } from "../services/AuthService";
-import MainLayout from "./MainLayout"; // Importamos el layout
+import MainLayout from "./MainLayout";
 
 const colors = {
   cardBg: "#FFFFFF", primary: "#E78052", textDark: "#3E3227", 
@@ -23,14 +22,17 @@ const StudentDashboard = ({ alVolver }) => {
       const user = authService.getUser();
       const token = authService.getToken();
       if (user && user.estudianteId) {
-        setEstudianteNombre(user.nombre.split(" ")[0]); // Usar solo el primer nombre
+        setEstudianteNombre(user.nombre.split(" ")[0]);
         const datos = await solicitudService.obtenerMisSolicitudes(user.estudianteId, token);
         setLista(datos);
       }
-    } catch (error) { console.error(error); } finally { setLoading(false); }
+    } catch (error) { 
+      console.error(error); 
+    } finally { 
+      setLoading(false); 
+    }
   };
 
-  // Función auxiliar para estilos de estado
   const getBadgeDetails = (estado) => {
     switch (estado) {
       case "Aprobada": return { icono: "✅", texto: "Aprobada", color: colors.success };
@@ -41,14 +43,12 @@ const StudentDashboard = ({ alVolver }) => {
 
   return (
     <MainLayout role="Estudiante" onLogout={alVolver}>
-        {/* --- Tarjeta de Bienvenida --- */}
         <div style={{ backgroundColor: colors.primary, padding: '3rem', borderRadius: '24px', color: 'white', marginBottom: '3rem', boxShadow: '0 20px 30px -15px rgba(231, 128, 82, 0.6)', backgroundImage: 'linear-gradient(45deg, #E78052, #F0C48F)' }}>
             <h1 style={{ fontSize: '2.5rem', margin: 0 }}>¡Hola, {estudianteNombre}! 👋</h1>
             <p style={{ fontSize: '1.1rem', opacity: 0.9, marginTop: '0.5rem' }}>Bienvenido a tu panel. Aquí puedes ver el estado de tus trámites.</p>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '3rem' }}>
-            {/* --- Lista de Solicitudes Recientes --- */}
             <div style={{ backgroundColor: colors.cardBg, padding: '2.5rem', borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
                 <h2 style={{ marginBottom: '2rem', color: colors.textDark }}>Mis Solicitudes Recientes</h2>
                 {loading ? <p>Cargando tus trámites...</p> : lista.length === 0 ? (
@@ -88,13 +88,15 @@ const StudentDashboard = ({ alVolver }) => {
                 )}
             </div>
 
-            {/* --- Tarjeta de Acción Rápida --- */}
             <div style={{ backgroundColor: colors.cardBg, padding: '2.5rem', borderRadius: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', height: 'fit-content', textAlign: 'center' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🚀</div>
                 <h2 style={{ marginBottom: '1rem', color: colors.textDark, fontSize: '1.5rem' }}>¿Nuevo Trámite?</h2>
                 <p style={{ color: colors.textLight, marginBottom: '2rem' }}>Inicia una nueva solicitud de licencia fácilmente.</p>
-                {/* Aquí iría la lógica para abrir el formulario de nueva solicitud */}
-                <button style={{ width: '100%', padding: '1.2rem', backgroundColor: colors.primary, color: 'white', border: 'none', borderRadius: '16px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem', boxShadow: '0 10px 20px -10px rgba(231, 128, 82, 0.6)', transition: 'transform 0.2s' }} onMouseOver={(e) => e.target.style.transform = 'scale(1.02)'} onMouseOut={(e) => e.target.style.transform = 'scale(1)'}>
+                <button 
+                  style={{ width: '100%', padding: '1.2rem', backgroundColor: colors.primary, color: 'white', border: 'none', borderRadius: '16px', fontWeight: 'bold', cursor: 'pointer', fontSize: '1.1rem', boxShadow: '0 10px 20px -10px rgba(231, 128, 82, 0.6)', transition: 'transform 0.2s' }} 
+                  onMouseOver={(e) => e.target.style.transform = 'scale(1.02)'} 
+                  onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                >
                     + Crear Solicitud
                 </button>
             </div>

@@ -7,7 +7,6 @@ const BandejaJefe = ({ alVolver }) => {
   const [jefeCarrera, setJefeCarrera] = useState(""); 
   const [loading, setLoading] = useState(true);
 
-  // ⚠️ PUERTO DEL BACKEND (Verifica que sea el 5057)
   const BASE_URL_FOTOS = "http://localhost:5057"; 
 
   useEffect(() => { cargarDatos(); }, []);
@@ -15,25 +14,19 @@ const BandejaJefe = ({ alVolver }) => {
   const cargarDatos = async () => {
     try {
       const token = authService.getToken();
-      
-      // 🛡️ SEGURIDAD 1: Si no hay token, no hacemos nada
       if (!token) {
         console.warn("No hay token, el usuario debe loguearse.");
         setLoading(false);
         return;
       }
 
-      // 🛡️ SEGURIDAD 2: Decodificar con cuidado
       try {
           const payload = JSON.parse(atob(token.split('.')[1]));
-          
-          // Buscar el email en todas las etiquetas posibles
           const emailJefe = payload["email"] || 
                             payload["unique_name"] || 
                             payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] || 
                             "";
 
-          // Filtro visual para el título
           let carreraDelJefe = "General";
           const emailMin = emailJefe.toLowerCase();
 
@@ -49,10 +42,7 @@ const BandejaJefe = ({ alVolver }) => {
           console.error("Error leyendo el token:", e);
       }
 
-      // 4. TRAER DATOS DEL BACKEND
       const datos = await solicitudService.obtenerPendientes(token);
-      
-      // Filtramos solo las pendientes
       if(datos && Array.isArray(datos)) {
         const soloPendientes = datos.filter(x => x.estado === "Pendiente");
         setLista(soloPendientes);
@@ -60,34 +50,31 @@ const BandejaJefe = ({ alVolver }) => {
 
     } catch (error) { 
       console.error(error);
-      // Omitimos el alert si es error de conexión inicial para no molestar
+
     }
     finally { setLoading(false); }
   };
 
-  // 💬 AQUÍ ESTÁ LA MAGIA DE LOS COMENTARIOS
+
   const procesar = async (id, decision) => {
-    
-    // 1. Pedimos el motivo con una cajita
+
     const texto = prompt(`Escribe una observación para ${decision}:`, "Sin observaciones");
     
-    // Si da a "Cancelar", no hacemos nada
+  
     if (texto === null) return; 
 
     try {
       const token = authService.getToken();
 
-      // 🛡️ Verificamos sesión antes de enviar
       if (!token) {
         alert("⚠️ Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.");
         return;
       }
-      
-      // 2. Enviamos la decisión Y el texto al servicio
+
       await solicitudService.revisar(id, decision, texto, token);
       
       alert("✅ ¡Procesado correctamente!");
-      cargarDatos(); // Recargamos la lista
+      cargarDatos(); 
     } catch (error) { 
         alert("❌ Error: " + error.message); 
     }

@@ -1,18 +1,14 @@
 import axios from 'axios';
 
-// ⚠️ Asegúrate de que este puerto coincida con el de tu terminal de .NET (5057)
 const API_URL = "http://localhost:5057/api/solicitud"; 
 
 export const solicitudService = {
 
-    // 1. CREAR SOLICITUD (Estudiante)
-    // Se mantiene POST y el envío de FormData para los archivos de respaldo
     crear: async (formData, token) => {
         try {
             const response = await axios.post(API_URL, formData, {
                 headers: { 
                     'Authorization': `Bearer ${token}`
-                    // Axios configura automáticamente el 'Content-Type' para FormData
                 }
             });
             return response.data;
@@ -21,8 +17,6 @@ export const solicitudService = {
             throw error;
         }
     },
-
-    // 2. OBTENER MIS SOLICITUDES (Estudiante)
     obtenerMisSolicitudes: async (token) => {
         try {
             const response = await axios.get(`${API_URL}/mis-solicitudes`, {
@@ -35,7 +29,6 @@ export const solicitudService = {
         }
     },
 
-    // 3. OBTENER PENDIENTES (Jefe de Carrera)
     obtenerPendientes: async (token) => {
         try {
             const response = await axios.get(`${API_URL}/pendientes`, {
@@ -47,14 +40,11 @@ export const solicitudService = {
             throw error;
         }
     },
-
-    // 4. REVISAR SOLICITUD (Aprobar/Rechazar - Jefe de Carrera)
-    // CORRECCIÓN: Se usa POST según tu SolicitudController
     revisar: async (id, estado, observacion, token) => {
         try {
             const response = await axios.post(`${API_URL}/revisar/${id}`, 
             { 
-                Estado: estado,       // Sincronizado con RevisarDTO en C#
+                Estado: estado,      
                 Observacion: observacion 
             }, 
             {
@@ -67,8 +57,6 @@ export const solicitudService = {
         }
     },
 
-    // 5. OBTENER PROCESADAS (Jefe de Carrera - Historial)
-    // Vital para que los contadores del Dashboard no se queden en 0
     obtenerProcesadas: async (token) => {
         try {
             const response = await axios.get(`${API_URL}/procesadas`, {
@@ -80,8 +68,6 @@ export const solicitudService = {
             throw error;
         }
     },
-
-    // 6. DERIVAR AL DECANO
     derivar: async (id, token) => {
         try {
             const response = await axios.post(`${API_URL}/derivar/${id}`, {}, {

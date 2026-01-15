@@ -5,7 +5,6 @@ import MainLayout from "./MainLayout";
 import "./Dashboard.css"; 
 
 const JefeDashboard = ({ onLogout }) => {
-  // --- Estados ---
   const [lista, setLista] = useState([]);
   const [loading, setLoading] = useState(true);
   const [usuarioNombre, setUsuarioNombre] = useState("Jefe de Carrera");
@@ -17,13 +16,11 @@ const JefeDashboard = ({ onLogout }) => {
   const [visor, setVisor] = useState({ abierto: false, ruta: "" });
   const [toast, setToast] = useState({ visible: false, mensaje: "", tipo: "success" });
 
-  // --- Lógica de Carga de Datos Reales (Sincronización Dinámica) ---
   const cargarDatos = useCallback(async () => {
     setLoading(true);
     try {
       const token = authService.getToken();
       
-      // Obtenemos los dos listados reales de la base de datos de forma paralela
       const [pendientes, procesadas] = await Promise.all([
         solicitudService.obtenerPendientes(token),
         solicitudService.obtenerProcesadas(token)
@@ -31,7 +28,6 @@ const JefeDashboard = ({ onLogout }) => {
       
       setLista(pendientes);
       
-      // Actualizamos los contadores dinámicos según el historial real de la DB
       setStats({
         pendientes: pendientes.length,
         procesadas: procesadas.length,
@@ -50,7 +46,6 @@ const JefeDashboard = ({ onLogout }) => {
     cargarDatos();
   }, [cargarDatos]);
 
-  // --- Handlers de Notificación y Acción ---
   const mostrarNotificacion = (mensaje, tipo = "success") => {
     setToast({ visible: true, mensaje, tipo });
     setTimeout(() => setToast({ visible: false, mensaje: "", tipo: "success" }), 4000);
@@ -60,12 +55,10 @@ const JefeDashboard = ({ onLogout }) => {
     try {
       const token = authService.getToken();
       
-      // Enviamos la revisión (Aprobación/Rechazo) al servidor
-      // IMPORTANTE: Asegúrate que tu SolicitudService use POST o PUT según tu controlador
       await solicitudService.revisar(modal.id, modal.tipo, modal.obs, token);
       
       setModal({ abierto: false, tipo: "", id: null, obs: "" });
-      cargarDatos(); // Recarga vital para actualizar los contadores y limpiar la bandeja
+      cargarDatos(); 
       mostrarNotificacion(`¡Solicitud ${modal.tipo} con éxito!`, "success");
     } catch (error) {
       console.error(error);
@@ -76,13 +69,11 @@ const JefeDashboard = ({ onLogout }) => {
   return (
     <MainLayout role="Jefe de Carrera" onLogout={onLogout}>
         
-        {/* Banner de Bienvenida Institucional Restaurado */}
         <div className="welcome-banner-jefe">
             <h1 style={{ fontSize: '1.8rem', margin: 0, fontWeight: 800 }}>¡Bienvenido, {usuarioNombre}! 🎓</h1>
             <p style={{ opacity: 0.9, marginTop: '0.4rem' }}>Panel de revisión y control académico de licencias.</p>
         </div>
 
-        {/* Tarjetas de Resumen en Rejilla Horizontal (Grid Corregido en CSS) */}
         <div className="stats-grid">
             <div className="stat-card">
                 <div className="stat-label">Pendientes</div>
@@ -98,7 +89,6 @@ const JefeDashboard = ({ onLogout }) => {
             </div>
         </div>
 
-        {/* Tabla de Bandeja de Entrada */}
         <div className="table-container">
             <div style={{ padding: '18px 25px', borderBottom: '1px solid #edf2f7' }}>
                 <h3 style={{ color: 'var(--upds-blue)', margin: 0, fontWeight: 800 }}>📥 BANDEJA DE ENTRADA</h3>
@@ -147,7 +137,6 @@ const JefeDashboard = ({ onLogout }) => {
             </div>
         </div>
 
-        {/* --- MODAL DE VISOR DE FOTOS --- */}
         {visor.abierto && (
             <div className="modal-overlay" onClick={() => setVisor({abierto: false, ruta: ""})}>
                 <div className="modal-image-box" onClick={(e) => e.stopPropagation()}>
@@ -162,7 +151,6 @@ const JefeDashboard = ({ onLogout }) => {
             </div>
         )}
 
-        {/* --- MODAL DE COMENTARIO COMPACTO --- */}
         {modal.abierto && (
             <div className="modal-overlay">
                 <div className="modal-content" style={{maxWidth: '420px'}}>
@@ -194,7 +182,6 @@ const JefeDashboard = ({ onLogout }) => {
             </div>
         )}
 
-        {/* --- NOTIFICACIÓN TOAST AGRADABLE --- */}
         {toast.visible && (
             <div className="custom-toast">
                 <span className="toast-icon">{toast.tipo === 'success' ? '🚀' : '⚠️'}</span>

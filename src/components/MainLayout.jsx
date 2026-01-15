@@ -3,16 +3,12 @@ import { authService } from "../services/AuthService";
 import './Dashboard.css';
 
 const MainLayout = ({ children, role, onLogout }) => {
-  // Extraemos la información del usuario autenticado
   const user = authService.getUser();
-  
-  // Sincronización del nombre para mostrar: prioriza el nombre real guardado en el login
   const nombreMostrar = user?.nombre || "Usuario";
 
   return (
     <div className="dashboard-container">
       
-      {/* 🟦 HEADER SUPERIOR PREMIUM (Colores Institucionales) */}
       <header className="top-bar">
         <div className="logo-area">
             <img 
@@ -25,12 +21,10 @@ const MainLayout = ({ children, role, onLogout }) => {
         
         <div className="user-area">
             <div className="user-info text-end">
-                {/* Nombre y Rol extraídos dinámicamente */}
                 <div style={{ fontWeight: 'bold', fontSize: '1rem' }}>{nombreMostrar}</div>
                 <div className="user-role" style={{ fontSize: '0.8rem', opacity: 0.8 }}>{role}</div>
             </div>
             
-            {/* Avatar circular sólido con inicial dinámica */}
             <div style={{
                 width: '40px', 
                 height: '40px', 
@@ -48,14 +42,12 @@ const MainLayout = ({ children, role, onLogout }) => {
                 {nombreMostrar.charAt(0).toUpperCase()}
             </div>
 
-            {/* BOTÓN FORMAL: Texto "Salir" con diseño de relieve físico configurado en Dashboard.css */}
             <button onClick={onLogout} className="logout-btn">
                 Salir
             </button>
         </div>
       </header>
 
-      {/* ⬜ SIDEBAR MINIMALISTA: Enfocado únicamente en el acceso principal */}
       <aside className="sidebar">
         <nav>
             <ul className="sidebar-menu">
@@ -65,12 +57,10 @@ const MainLayout = ({ children, role, onLogout }) => {
                         Dashboard
                     </a>
                 </li>
-                {/* Apartados adicionales de configuración eliminados para limpieza visual */}
             </ul>
         </nav>
       </aside>
 
-      {/* 📄 ÁREA DE CONTENIDO DINÁMICO */}
       <main className="main-content">
         {children}
       </main>

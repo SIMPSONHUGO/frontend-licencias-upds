@@ -5,12 +5,10 @@ import "./Login.css";
 
 const Login = () => {
   const [isRegistering, setIsRegistering] = useState(false); 
-  
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [carrera, setCarrera] = useState(""); // 👈 NUEVO: Estado para la carrera
-  
+  const [carrera, setCarrera] = useState(""); 
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState(""); 
   const [loading, setLoading] = useState(false);
@@ -18,17 +16,11 @@ const Login = () => {
   
   const navigate = useNavigate();
 
-  // LISTA DE CARRERAS (Exactamente como las escribimos en el Backend)
   const carrerasDisponibles = [
-    // Área Sistemas (Eiver)
     "Ingeniería de Sistemas", "Ingeniería en Redes", "Telecomunicaciones",
-    // Área Derecho (Ana)
     "Derecho",
-    // Área Empresarial (Javier)
     "Contaduría Pública", "Administración de Empresas", "Marketing", "Ingeniería Comercial",
-    // Área Social (Vanessa)
     "Psicología", "Comunicación Social", "Trabajo Social",
-    // Área Industrial (Martín)
     "Ingeniería Civil", "Ingeniería Industrial", "Ingeniería Petrolera"
   ];
 
@@ -40,14 +32,11 @@ const Login = () => {
 
     try {
       if (isRegistering) {
-        // --- REGISTRO CON CARRERA ---
         if (!carrera) {
             setError("Por favor selecciona tu carrera.");
             setLoading(false);
             return;
         }
-        // Enviamos nombre, email, password Y CARRERA
-        // (Nota: authService.register debe estar listo para recibir 4 argumentos, lo revisaremos abajo)
         await authService.register(nombre, email, password, carrera);
         
         setSuccessMsg("¡Cuenta creada con éxito! Por favor inicia sesión.");
@@ -56,25 +45,21 @@ const Login = () => {
         setPassword("");
         setCarrera("");
       } else {
-        // --- LOGIN NORMAL ---
-        console.log("Enviando credenciales...");
         const data = await authService.login(email, password);
         
         if (data.token) {
           const user = authService.getUser();
-          console.log("Usuario logueado:", user);
 
           if (user.rol === "Estudiante") navigate("/estudiante");
           else if (user.rol === "Jefe") navigate("/jefe");
           else if (user.rol === "Coordinador") navigate("/coordinador");
-          else if (user.rol === "Decano") navigate("/decano"); // Futuro
+          else if (user.rol === "Decano") navigate("/decano");
           else navigate("/");
         } else {
           setError("Credenciales incorrectas.");
         }
       }
     } catch (err) {
-        console.log("Error:", err);
         let msg = "Ocurrió un error inesperado.";
         if (err.message === "Network Error") msg = "No hay conexión con el servidor.";
         else if (err.error) msg = err.error; 
@@ -107,8 +92,6 @@ const Login = () => {
         {successMsg && <div className="success-box">✅ {successMsg}</div>}
 
         <form onSubmit={handleSubmit}>
-          
-          {/* CAMPOS DE REGISTRO */}
           {isRegistering && (
             <div className="slide-in">
                 <div className="form-group">
@@ -119,7 +102,6 @@ const Login = () => {
                     </div>
                 </div>
 
-                {/* SELECTOR DE CARRERA */}
                 <div className="form-group">
                     <label className="form-label">Carrera</label>
                     <div className="input-wrapper">

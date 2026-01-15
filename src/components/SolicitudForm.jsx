@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // <--- Agregamos useEffect
+import { useState, useEffect } from "react";
 import { solicitudService } from "../services/SolicitudService";
 import { authService } from "../services/AuthService";
 
@@ -7,15 +7,13 @@ const SolicitudForm = ({ alCancelar, alTerminar }) => {
   const [tipoSolicitud, setTipoSolicitud] = useState("Salud");
   const [archivo, setArchivo] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [estudianteId, setEstudianteId] = useState(null); // Estado para el ID real
+  const [estudianteId, setEstudianteId] = useState(null);
 
-  // AL CARGAR: Desciframos el token para sacar el ID verdadero
   useEffect(() => {
     const token = authService.getToken();
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        // El ID suele venir en 'nameid' o 'sub' dependiendo de la configuración
         const idReal = payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] || payload["nameid"];
         setEstudianteId(idReal);
       } catch (e) {
@@ -37,7 +35,6 @@ const SolicitudForm = ({ alCancelar, alTerminar }) => {
       const token = authService.getToken();
       
       const formData = new FormData();
-      // ¡AQUÍ ESTÁ LA MAGIA! Usamos el ID real, no el 1 fijo.
       formData.append("EstudianteId", estudianteId); 
       formData.append("TipoSolicitud", tipoSolicitud);
       formData.append("Motivo", motivo);
@@ -100,7 +97,6 @@ const SolicitudForm = ({ alCancelar, alTerminar }) => {
             />
           </div>
 
-          {/* Mensaje de depuración (opcional, para que veas tu ID) */}
           <div className="text-muted small mb-3">
              Tu ID de usuario detectado es: <strong>{estudianteId || "Cargando..."}</strong>
           </div>
