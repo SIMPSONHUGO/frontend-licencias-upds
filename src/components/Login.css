@@ -1,0 +1,180 @@
+/* src/components/Login.css */
+
+:root {
+  --upds-blue: #003366;
+  --upds-gold: #FFCC00;
+  --text-dark: #333;
+  --text-muted: #777;
+}
+
+/* CONTENEDOR PRINCIPAL: Forzamos pantalla completa y centrado */
+.login-container {
+  position: relative;
+  width: 100vw;       /* 100% del ancho de la ventana */
+  height: 100vh;      /* 100% del alto de la ventana */
+  display: flex;      /* Activar Flexbox */
+  justify-content: center; /* Centrar Horizontalmente */
+  align-items: center;     /* Centrar Verticalmente */
+  overflow: hidden;
+}
+
+/* --- CARRUSEL DE FONDO (Fixed para que no se mueva) --- */
+.bg-carousel {
+    position: fixed; /* Se queda fijo al fondo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Detrás de todo */
+}
+
+.bg-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0; 
+    filter: brightness(0.6); /* Un poco más oscuro para que resalte el login */
+    animation: carouselFade 15s infinite ease-in-out;
+}
+
+/* TUS IMÁGENES UPDS */
+.bg-image:nth-child(1) {
+    animation-delay: 0s;
+    background-image: url('https://www.upds.edu.bo/wp-content/uploads/2020/06/Tarija-9.jpg'); 
+}
+.bg-image:nth-child(2) {
+    animation-delay: 5s;
+    background-image: url('https://www.upds.edu.bo/wp-content/uploads/2022/10/cambio-climatico.jpg'); 
+}
+.bg-image:nth-child(3) {
+    animation-delay: 10s;
+    background-image: url('https://www.upds.edu.bo/wp-content/uploads/2022/12/DOCENTES-INVESTIGADORES.jpg'); 
+}
+
+@keyframes carouselFade {
+    0% { opacity: 0; transform: scale(1); }
+    10% { opacity: 1; }
+    33% { opacity: 1; transform: scale(1.05); }
+    43% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* TARJETA DE LOGIN */
+.login-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Sombra más fuerte */
+  width: 100%;
+  max-width: 380px; /* Tamaño compacto */
+  text-align: center;
+  position: relative;
+  z-index: 10; /* Asegura que esté ENCIMA del fondo */
+  border-top: 5px solid var(--upds-gold);
+  border-bottom: 5px solid var(--upds-blue);
+}
+
+/* El resto de estilos se mantiene igual... */
+.login-header { margin-bottom: 2rem; }
+.login-logo { font-size: 3.5rem; margin-bottom: 0.5rem; }
+.login-header h1 { color: var(--upds-blue); margin: 0; font-size: 1.8rem; font-weight: 800; }
+.login-header p { color: var(--text-muted); margin-top: 0.5rem; font-size: 1rem; }
+
+.form-group { margin-bottom: 1.5rem; text-align: left; }
+.form-label { display: block; margin-bottom: 0.5rem; color: var(--upds-blue); font-weight: 600; font-size: 0.9rem; }
+
+.form-control-aesthetic {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    box-sizing: border-box; /* Importante para que no se salga del contenedor */
+}
+
+.form-control-aesthetic:focus {
+    border-color: var(--upds-blue);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+}
+
+.btn-login-aesthetic {
+    width: 100%;
+    padding: 14px;
+    background: var(--upds-blue);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.btn-login-aesthetic:hover {
+    background: #004a99;
+    transform: translateY(-2px);
+}
+
+.input-wrapper { position: relative; }
+.password-toggle-icon { position: absolute; right: 15px; top: 13px; cursor: pointer; color: #777; }
+.error-box { background: #ffebee; color: #c62828; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 0.9rem; }
+/* --- NUEVOS ESTILOS PARA REGISTRO --- */
+
+/* Caja de éxito verde */
+.success-box {
+    background-color: #f6ffed;
+    color: #52c41a;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #b7eb8f;
+    text-align: left;
+    font-size: 0.9rem;
+    animation: fadeIn 0.5s;
+}
+
+/* Enlace de cambio de modo (Login <-> Registro) */
+.toggle-mode {
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: #444; /* Color más oscuro para que se lea bien */
+    background: rgba(255,255,255,0.8); /* Fondo suave por si la imagen de atrás es oscura */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.toggle-mode span {
+    color: var(--upds-blue);
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s;
+    margin-left: 5px;
+}
+
+.toggle-mode span:hover {
+    color: var(--upds-gold);
+}
+
+/* Animación suave para que el campo Nombre no aparezca de golpe */
+.slide-in {
+    animation: slideInInput 0.4s ease-out;
+}
+
+@keyframes slideInInput {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
